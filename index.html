@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SW Demo</title>
+  </head>
+  <body>
+    <a href="/Export.do">Export</a>
+    <script>
+      const activeWorkerPath = "/service-worker.js";
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register(activeWorkerPath);
+      }
+
+      (async () => {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        registrations.forEach((registration) => {
+          console.log(registration.active.scriptURL);
+          const { pathname } = new URL(registration.active.scriptURL);
+
+          if (pathname != activeWorkerPath) {
+            registration.unregister();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
